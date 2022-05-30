@@ -64,7 +64,7 @@ class RMSELoss(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, arguments, batch_size=64, logdir='experiment_1/runs/'):
+    def __init__(self, arguments, batch_size=64, logdir='experiment_3/runs/'):
         super().__init__()
         self.args = arguments
         self.batch_size = batch_size
@@ -179,8 +179,8 @@ if __name__ == "__main__":
                   batch_size=params['batch_size'])
     print('done with init model')
 
-    train = FoodDataset(carbs_file='images/json_train_005.json',
-                        image_dir='images/train_005',
+    train = FoodDataset(carbs_file='images/json_depth_train.json',
+                        image_dir='images/train_depth',
                         type_data='train')
     train = DataLoader(train,
                        batch_size=params['batch_size'],
@@ -188,8 +188,8 @@ if __name__ == "__main__":
                        pin_memory=True)
     print('done with loading train data')
 
-    test = FoodDataset(carbs_file='images/json_test_005.json',
-                       image_dir='images/test_005',
+    test = FoodDataset(carbs_file='images/json_depth_test.jsonn',
+                       image_dir='images/test_depth',
                        type_data='test')
     test = DataLoader(test,
                       batch_size=params['batch_size'],

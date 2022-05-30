@@ -48,7 +48,7 @@ def get_args():
 
 args = get_args()
 model = Model(args)
-with open('images/json_test_005.json') as json_file:
+with open('images/json_depth_test.json') as json_file:
     json_test = json.load(json_file)
 
 if args.input_file:
@@ -64,12 +64,12 @@ if args.input_file:
 
 else:
     prediction_dict = {}
-    for i in tqdm(os.listdir('images/test_005')):
-        images = transformation_test(io.imread('images/test_005/' + i))
+    for i in tqdm(os.listdir('images/test_depth')):
+        images = transformation_test(io.imread('images/test_depth/' + i))
         images = images.reshape((1, *images.shape))
         with torch.no_grad():
             predict = model.model_dev(images.to(device))
-            prediction_dict[json_test[i]] = float(predict[0])
+            prediction_dict[json_test[i.split('.')[0]]] = float(predict[0])
 
-with open(f'experiment_1/prediction_results/prediction_dict_{args.runname}.json', 'w') as fp:
+with open(f'experiment_3/prediction_results/prediction_dict_{args.runname}.json', 'w') as fp:
     json.dump(prediction_dict, fp)
