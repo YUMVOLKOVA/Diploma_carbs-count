@@ -18,8 +18,8 @@ print(f"device: {device}, {torch.cuda.get_device_name(0)}")
 
 os.chdir('C:\\Users\\Yulia\\Desktop\\carbs-count')
 
-params = {'num_epochs': 40,
-          'batch_size': 64,
+params = {'num_epochs': 20,
+          'batch_size': 20,
           'lr': 1e-3}
 
 
@@ -127,7 +127,9 @@ class Model(nn.Module):
         return loss, loss_mae, loss_mse, loss_rmse
 
     def fit(self, num_epochs, train_data, test_data, lr):
-        optimizer = Adam(self.model_dev.parameters(), lr=lr)
+        # optimizer = Adam(self.model_dev.parameters(), lr=lr)
+        # optimizer = torch.optim.RMSprop(self.model_dev.parameters(), lr=lr, eps=1.0, weight_decay=0.9, momentum=0.9)
+        optimizer = torch.optim.SGD(self.model_dev.parameters(), lr=lr)
         trainable_params, total_params = self.count_parameters(self.model_dev)
         print(f"Parameters: {trainable_params} trainable, {total_params} total")
 
@@ -179,8 +181,8 @@ if __name__ == "__main__":
                   batch_size=params['batch_size'])
     print('done with init model')
 
-    train = FoodDataset(carbs_file='images/json_train_005.json',
-                        image_dir='images/train_005',
+    train = FoodDataset(carbs_file='images/json_aug.json',
+                        image_dir='images/train_RGB_aug',
                         type_data='train')
     train = DataLoader(train,
                        batch_size=params['batch_size'],
@@ -188,8 +190,8 @@ if __name__ == "__main__":
                        pin_memory=True)
     print('done with loading train data')
 
-    test = FoodDataset(carbs_file='images/json_test_005.json',
-                       image_dir='images/test_005',
+    test = FoodDataset(carbs_file='images/json_depth_test.json',
+                       image_dir='images/test_RGB',
                        type_data='test')
     test = DataLoader(test,
                       batch_size=params['batch_size'],

@@ -10,11 +10,17 @@ def transform_data(element):
     return np.array([element], dtype=np.float32)
 
 
+# transformation_train = transforms.Compose([transforms.ToPILImage(),
+#                                            transforms.Resize((224, 224)),
+#                                            transforms.RandomHorizontalFlip(),
+#                                            transforms.ToTensor(),
+#                                            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+
 transformation_train = transforms.Compose([transforms.ToPILImage(),
                                            transforms.Resize((224, 224)),
-                                           transforms.RandomHorizontalFlip(),
                                            transforms.ToTensor(),
                                            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+
 
 transformation_test = transforms.Compose([transforms.ToPILImage(),
                                           transforms.Resize((224, 224)),
@@ -39,7 +45,7 @@ class FoodDataset(Dataset):
 
     def __getitem__(self, idx):
         element = self.carbs_values_tuples[idx]
-        img_name = os.path.join(self.image_dir, element[0])
+        img_name = os.path.join(self.image_dir, element[0] + '.png')
         image_rgb = io.imread(img_name)
         sample = {"fname": element[0], "image": image_rgb}
         value = transform_data(element[1])

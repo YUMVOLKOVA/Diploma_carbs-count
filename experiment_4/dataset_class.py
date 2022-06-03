@@ -6,34 +6,26 @@ import json
 import os
 import torch
 
-
 def transform_data(element):
     return np.array([element], dtype=np.float32)
 
-
-transformation_rgb = transforms.Compose([transforms.ToPILImage(),
+transformation = transforms.Compose([transforms.ToPILImage(),
                                           transforms.Resize((224, 224)),
                                           transforms.ToTensor(),
                                           transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
-transformation_depth = transforms.Compose([transforms.ToPILImage(),
-                                          transforms.Resize((224, 224)),
-                                          transforms.ToTensor()])
-
-os.chdir('C:\\Users\\Yulia\\Desktop\\carbs-count')
-
-
 class FoodDataset(Dataset):
-    def __init__(self, carbs_file, image_dir,type_data):
+    def __init__(self, carbs_file, image_dir, type_data):
         self.image_dir = image_dir
         splitted_path = self.image_dir.split('/')[-1]
         splitted_path = splitted_path.split('_')[0]
         if type_data == 'train':
-            self.depth_dir = 'images/' + str(splitted_path) + '_raw_aug'
+            self.depth_dir = 'images/' + str(splitted_path) + '_depth_aug'
         elif type_data == 'test':
-            self.depth_dir = 'images/' + str(splitted_path) + '_raw_norm'
-        self.transform_rgb = transformation_rgb
-        self.transform_depth = transformation_depth
+            self.depth_dir = 'images/' + str(splitted_path) + '_depth'
+        self.transform_rgb = transformation
+        self.transform_depth = transformation
+
         with open(carbs_file) as json_file:
             self.data = json.load(json_file)
         self.carbs_values_tuples = tuple(self.data.items())
@@ -48,10 +40,10 @@ class FoodDataset(Dataset):
         img_name = os.path.join(self.image_dir, element[0] + '.png')
         image_rgb = io.imread(img_name)
         image_rgb = self.transform_rgb(image_rgb)
-        depth_name = os.path.join(self.depth_dir, element[0] + '.png')
-
+        depth_name = os.path.join(self.depth_dir, element[0] + '.jpeg')
         image_depth = io.imread(depth_name)
-        image_depth = self.transform_depth(image_depth.astype(np.uint8))
+        image_depth = self.transform_depth(image_depth)
+
         image = torch.cat((self.transform_(image_rgb), self.transform_(image_depth)))
         sample = {"fname": element[0], "image": image}
 

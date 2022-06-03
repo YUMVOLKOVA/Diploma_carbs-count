@@ -64,7 +64,7 @@ class RMSELoss(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, arguments, batch_size=64, logdir='experiment_2/runs/'):
+    def __init__(self, arguments, batch_size=64, logdir='experiment_4/runs/'):
         super().__init__()
         self.args = arguments
         self.batch_size = batch_size

@@ -10,18 +10,11 @@ class PretrainedModel(nn.Module):
         self.type_of_training = type_of_training
 
         self.model = getattr(models, self.pytorch_model)(pretrained=True)
-        if 'res' in pytorch_model:
-            weight = self.model.conv1.weight.clone()
-            self.model.conv1 = nn.Conv2d(4, 64, kernel_size=7, stride=2, padding=3, bias=False)
-            with torch.no_grad():
-                self.model.conv1.weight[:, :3] = weight
-                self.model.conv1.weight[:, 3] = self.model.conv1.weight[:, 0]
-        elif 'den' in pytorch_model:
-            weight = self.model.features.conv0.weight.clone()
-            self.model.features.conv0 = nn.Conv2d(4, 64, kernel_size=7, stride=2, padding=3, bias=False)
-            with torch.no_grad():
-                self.model.features.conv0.weight[:, :3] = weight
-                self.model.features.conv0.weight[:, 3] = self.model.features.conv0.weight[:, 0]
+        weight = self.model.conv1.weight.clone()
+        self.model.conv1 = nn.Conv2d(6, 64, kernel_size=7, stride=2, padding=3, bias=False)
+        with torch.no_grad():
+            self.model.conv1.weight[:, :3] = weight
+            self.model.conv1.weight[:, 3:] = weight
 
         if self.type_of_training == 'fixed':
             count = 1
