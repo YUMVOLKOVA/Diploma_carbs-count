@@ -5,7 +5,7 @@ mean baseline: always predicts the value that is the average value in the datase
 import argparse
 import numpy as np
 import json
-from sklearn.metrics import mean_squared_error, mean_squared_log_error, mean_absolute_error
+from sklearn.metrics import mean_squared_error,  mean_absolute_error
 import os
 
 
@@ -27,10 +27,10 @@ parser.add_argument("--target_train",
 parser.add_argument("--target_test",
                     help="test target dir",
                     required=True)
-parser.add_argument("--loss",
-                    help="what loss function to use",
-                    choices=['mae', 'mse', 'msle'],
-                    required=True)
+# parser.add_argument("--loss",
+#                     help="what loss function to use",
+#                     choices=['mae', 'mse', 'rmse'],
+#                     required=True)
 args = parser.parse_args()
 
 
@@ -44,14 +44,7 @@ def baseline_model(values):
 
 
 def calculate_loss(y, y_hat):
-    if args.loss == 'mae':
-        output = mean_absolute_error(y, y_hat)
-    elif args.loss == 'mse':
-        output = mean_squared_error(y, y_hat)
-    elif args.loss == 'msle':
-        output = mean_squared_log_error(y, y_hat)
-
-    return output
+    return mean_absolute_error(y, y_hat), mean_squared_error(y, y_hat), mean_squared_error(y, y_hat, squared=False)
 
 
 if __name__ == "__main__":
@@ -72,10 +65,14 @@ if __name__ == "__main__":
 
     baseline = baseline_model(train_array)
     print(f'baseline: {baseline()}')
-    loss_train = calculate_loss(train_array, [baseline()] * len(train_array))
-    loss_test = calculate_loss(test_array, [baseline()] * len(test_array))
+    loss_train_mae, loss_train_mse, loss_train_rmse = calculate_loss(train_array, [baseline()] * len(train_array))
+    loss_test_mae, loss_test_mse, loss_test_rmse = calculate_loss(test_array, [baseline()] * len(test_array))
 
     print(f'''
-    baseline {args.loss} loss for train: {loss_train},
-    baseline {args.loss} loss for test: {loss_test}
+    baseline MAE loss for train: {loss_train_mae},
+    baseline MAE loss for test: {loss_test_mae},
+    baseline MSE loss for train: {loss_train_mse},
+    baseline MSE loss for test: {loss_test_mse},
+    baseline RMSE loss for train: {loss_train_rmse},
+    baseline RMSE loss for test: {loss_test_rmse}
     ''')
