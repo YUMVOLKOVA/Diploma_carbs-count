@@ -72,10 +72,10 @@ else:
             predict = model.model_dev(images.to(device))
             prediction_dict[json_test[i.split('.')[0]]] = float(predict[0])
             prediction_dict_dish[i.split('.')[0]] = {json_test[i.split('.')[0]]: float(predict[0])}
+    with open(f'experiment_1/prediction_results/prediction_dict_{args.runname}_dish.json', 'w') as fp:
+        json.dump(prediction_dict_dish, fp)
+    with open(f'experiment_1/prediction_results/prediction_dict_{args.runname}.json', 'w') as fp:
+        json.dump(prediction_dict, fp)
 
 
-with open(f'experiment_1/prediction_results/prediction_dict_{args.runname}.json', 'w') as fp:
-    json.dump(prediction_dict, fp)
 
-with open(f'experiment_1/prediction_results/prediction_dict_{args.runname}_dish.json', 'w') as fp:
-    json.dump(prediction_dict_dish, fp)

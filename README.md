@@ -10,6 +10,11 @@
 ![resnet](pics/resnet.jpg)
 ### DenseNet
 ![resnet](pics/densenet.jpg)
+
+## Эксперименты
+
+- [Таблица с проведенными экспериментами](https://docs.google.com/spreadsheets/d/19Z_CxOkt9yZjJ6NMFx-4Ru2UCLqbtjkaI8z7ICcx7-o/edit?usp=sharing)
+
 ## Результаты
 |                              **Модель**                              | **MAE**  | **MSE** | **RMSE** |  
 |:--------------------------------------------------------------------:|:--------:|:-------:|:--------:|
